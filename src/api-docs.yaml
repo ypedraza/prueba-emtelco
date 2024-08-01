@@ -1,0 +1,99 @@
+paths:
+  /api/login:
+    post:
+      summary: Inicia sesión de usuario
+      description: Este endpoint permite a los usuarios iniciar sesión.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Nombre de usuario
+                  example: admin
+                password:
+                  type: string
+                  description: Contraseña del usuario
+                  example: admin
+      responses:
+        200:
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Login successful"
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: Token de acceso JWT
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        400:
+          description: Error en login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Login failed"
+
+  /pokemon/habilidadesOcultas/{pokemon}:
+    get:
+      summary: Obtiene habilidades ocultas de un Pokémon
+      description: Este endpoint devuelve las habilidades ocultas de un Pokémon específico. Requiere autenticación JWT.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: pokemon
+          required: true
+          description: Nombre del Pokémon
+          schema:
+            type: string
+      responses:
+        200:
+          description: Habilidades ocultas obtenidas exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Habilidades ocultas del pokemon Pikachu"
+                  data:
+                    type: object
+                    properties:
+                      habilidades:
+                        type: object
+                        properties:
+                          ocultas:
+                            type: array
+                            items:
+                              type: string
+                            example: ["static", "lightning-rod"]
+        401:
+          description: No autorizado, token no proporcionado
+        403:
+          description: Acceso prohibido, token inválido
+        500:
+          description: Error interno del servidor

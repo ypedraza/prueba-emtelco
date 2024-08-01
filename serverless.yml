@@ -1,0 +1,24 @@
+service: mi-app-serverless
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-2
+
+functions:
+  app:
+    handler: server.handler
+    events:
+      - http:
+          path: /
+          method: any
+      - http:
+          path: /api/login
+          method: post
+      - http:
+          path: /pokemon/habilidadesOcultas/{pokemon}
+          method: get
+
+plugins:
+  - serverless-http
